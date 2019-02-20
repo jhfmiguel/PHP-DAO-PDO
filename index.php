@@ -18,3 +18,8 @@ require_once "config.php";
 //$user = new User();
 //$user->login("root", "123456");
 //echo $user;
+
+//Create a new user
+//$user = new User("user", "123456");
+//$user->insert();
+//echo $user;

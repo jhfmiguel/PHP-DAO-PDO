@@ -35,15 +35,9 @@ class User {
 
 	public function loadById($id) {
 		$sql = new Sql();
-		$results = $sql->select("SELECT * FROM tb_users WHERE iduser = :ID", array(
-			":ID" => $id,
-		));
+		$results = $sql->select("SELECT * FROM tb_users WHERE iduser = :ID", array(':ID' => $id));
 		if (count($results) > 0) {
-			$row = $results[0];
-			$this->setIdUser($row['iduser']);
-			$this->setDesLogin($row['deslogin']);
-			$this->setDesPassword($row['despassword']);
-			$this->setDtRegistration(new DateTime($row['dtregistration']));
+			$this->setData($results[0]);
 		}
 	}
 
@@ -54,24 +48,45 @@ class User {
 
 	public static function search($login) {
 		$sql = new Sql();
-		return $sql->select("SELECT * FROM tb_users WHERE deslogin LIKE :SEARCH ORDER BY deslogin", array(':SEARCH' => "%" . $login . "%",
-		));
+		return $sql->select("SELECT * FROM tb_users WHERE deslogin LIKE :SEARCH ORDER BY deslogin", array(':SEARCH' => "%" . $login . "%"));
 	}
 
 	public function login($login, $password) {
 		$sql = new Sql();
-		$results = $sql->select("SELECT * FROM tb_users WHERE deslogin = :LOGIN AND despassword = :PASSWORD", array(":LOGIN" => $login, ":PASSWORD" => $password,
-		));
+		$results = $sql->select("SELECT * FROM tb_users WHERE deslogin = :LOGIN AND despassword = :PASSWORD", array(':LOGIN' => $login, ':PASSWORD' => $password));
 		if (count($results) > 0) {
-			$row = $results[0];
-			$this->setIdUser($row['iduser']);
-			$this->setDesLogin($row['deslogin']);
-			$this->setDesPassword($row['despassword']);
-			$this->setDtRegistration(new DateTime($row['dtregistration']));
+			$this->setData($results[0]);
 		} else {
 			throw new Exception("Login and/or Password incorrect");
 
 		}
+	}
+
+	public function setData($data) {
+		$this->setIdUser($data['iduser']);
+		$this->setDesLogin($data['deslogin']);
+		$this->setDesPassword($data['despassword']);
+		$this->setDtRegistration(new DateTime($data['dtregistration']));
+	}
+
+	public function insert() {
+		$sql = new Sql();
+		$results = $sql->select("Call sp_users_insert(:LOGIN, :PASSWORD)", array(':LOGIN' => $this->getDesLogin(), ':PASSWORD' => $this->getDesPassword()));
+		if (count($results) > 0) {
+			$this->setData($results[0]);
+		}
+	}
+
+	public function update($login, $password) {
+		$this->setDesLogin($login);
+		$this->setDesPassword($password);
+		$sql = new Sql();
+		$sql->query("UPDATE tb_users SET deslogin = :LOGIN, despassword = :PASSWORD WHERE iduser = :ID", array(':LOGIN' => $this->getDesLogin(), ':PASSWORD' => $this->getDesPassword(), ':ID' => $this->getIdUser()));
+	}
+
+	public function __construct($login = "", $password = "") {
+		$this->setDesLogin($login);
+		$this->setDesPassword($password);
 	}
 
 	public function __toString() {
