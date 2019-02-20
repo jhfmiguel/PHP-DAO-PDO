@@ -1,5 +1,20 @@
 <?php
 require_once "config.php";
-$sql = new Sql();
-$users = $sql->select("SELECT * FROM tb_users");
-echo json_encode($users);
+
+//returns a user
+//$root = new User();
+//$root->loadById(1);
+//echo $root;
+
+//Returns a list of users
+//$list = User::getList();
+//echo json_encode($list);
+
+//Returns a list of users by login
+//$search = User::search("root");
+//echo json_encode($search);
+
+//Returns a user with login and password
+//$user = new User();
+//$user->login("root", "123456");
+//echo $user;
