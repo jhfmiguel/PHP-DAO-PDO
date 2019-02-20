@@ -23,3 +23,15 @@ require_once "config.php";
 //$user = new User("user", "123456");
 //$user->insert();
 //echo $user;
+
+//Update a user
+//$user = new User();
+//$user->loadById(8);
+//$user->update("user2", "654321");
+//echo $user;
+
+//Delete a user
+$user = new User();
+$user->loadById(8);
+$user->delete();
+echo $user;

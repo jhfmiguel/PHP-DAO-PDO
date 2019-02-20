@@ -84,6 +84,15 @@ class User {
 		$sql->query("UPDATE tb_users SET deslogin = :LOGIN, despassword = :PASSWORD WHERE iduser = :ID", array(':LOGIN' => $this->getDesLogin(), ':PASSWORD' => $this->getDesPassword(), ':ID' => $this->getIdUser()));
 	}
 
+	public function delete() {
+		$sql = new Sql();
+		$sql->query("DELETE FROM tb_users WHERE iduser = :ID", array(':ID' => $this->getIdUser()));
+		$this->setIdUser(0);
+		$this->setDesLogin("");
+		$this->setDesPassword("");
+		$this->setDtRegistration(new DateTime());
+	}
+
 	public function __construct($login = "", $password = "") {
 		$this->setDesLogin($login);
 		$this->setDesPassword($password);
